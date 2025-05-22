@@ -1,49 +1,52 @@
-//
-//  SplashView.swift
-//  MyFurniture
-//
-//  Created by Peyman Osatian on 2025-05-15.
-//
-
 import SwiftUI
 
 struct SplashView: View {
+    @State private var isActive = false
+
     var body: some View {
-        ZStack{
-            // Background color
-            Color(red: 111/255, green: 150/255, blue: 118/255)
-                .ignoresSafeArea()
-            VStack{
-                Spacer() // Pushes content to the center vertically
+        if isActive {
+            OnboardingView()
+        } else {
+            ZStack {
+                Color(red: 111 / 255, green: 150 / 255, blue: 118 / 255)
+                    .ignoresSafeArea()
                 
-                HStack(alignment: .center,spacing: 12){
-                    Image("couch")
-                        .resizable()
-                        .frame(width: 48 , height: 48)
-                        .foregroundColor(.white)
+                VStack {
+                    Spacer()
                     
-                    VStack(alignment: .leading, spacing: 1){
-                        Text("MyFurniture")
-                            .font(.custom("Lato-Black", size: 22))
-                            .fontWeight(.bold)
+                    // Logo + Text
+                    HStack(alignment: .center, spacing: 12) {
+                        Image("couch")
+                            .resizable()
+                            .frame(width: 46, height: 46)
                             .foregroundColor(.white)
                         
-                        Text("Design Your Comfort")
-                            .font(.custom("Lato-Thin", size: 16))
-                            .foregroundColor(.white.opacity(0.85))
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("MyFurniture")
+                                .font(.custom("Lato-Bold", size: 22))
+                                .foregroundColor(.white)
+                            
+                            Text("Design Your Comfort")
+                                .font(.custom("Lato-Regular", size: 14))
+                                .foregroundColor(.white.opacity(0.85))
+                        }
                     }
+                    
+                    Spacer()
+                    
+                    Text("A Furniture Shopping App")
+                        .font(.custom("Lato-Light", size: 14))
+                        .foregroundColor(.white.opacity(0.85))
+                        .padding(.bottom, 40)
                 }
-                Spacer()
-                Text("A furniture shopping app")
-                    .font(.custom("Lato-Regular", size: 16))
-                    .foregroundColor(.white.opacity(0.85))
-                    .padding(.bottom, 40)
+                .padding()
             }
-            .padding()
+            // ✅ Run timer on appear, inside the view hierarchy
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                    isActive = true
+                }
+            }
         }
     }
-}
-
-#Preview {
-    SplashView()
 }
