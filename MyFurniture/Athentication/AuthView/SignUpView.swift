@@ -1,14 +1,15 @@
 import SwiftUI
 
-struct SignInView: View {
+struct SignUpView: View {
     @State private var email: String = ""
+    @State private var username: String = ""
     @State private var password: String = ""
     @State private var showPassword: Bool = false
 
     var body: some View {
         VStack(spacing: 20) {
 
-            // MARK: - Logo & Tagline
+            // MARK: - Logo
             VStack(spacing: 8) {
                 HStack {
                     Image("couchGreen")
@@ -26,28 +27,41 @@ struct SignInView: View {
             }
             .padding(.top, 50)
 
-            // MARK: - Welcome Text
+            // MARK: - Title
             VStack(spacing: 4) {
-                Text("Let’s Sign You In")
+                Text("Getting Started")
                     .font(.title2)
                     .fontWeight(.bold)
 
-                Text("Welcome back, you’ve been missed!")
+                Text("Create an account to continue!")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
             .padding(.top, 24)
 
-            // MARK: - Email Input
+            // MARK: - Email Field
             TextField("Email", text: $email)
-                .padding()
+                .padding(.horizontal)
                 .frame(height: 50)
-                .background(RoundedRectangle(cornerRadius: 10).stroke(Color.green))
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
                 .padding(.horizontal)
 
-            // MARK: - Password Input
+            // MARK: - Username Field
+            TextField("Username", text: $username)
+                .padding(.horizontal)
+                .frame(height: 50)
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+                .padding(.horizontal)
+
+            // MARK: - Password Field
             HStack {
-                SecureField("Enter your password", text: $password)
+                if showPassword {
+                    TextField("Password", text: $password)
+                } else {
+                    SecureField("Password", text: $password)
+                }
                 Button(action: {
                     showPassword.toggle()
                 }) {
@@ -58,22 +72,14 @@ struct SignInView: View {
             .padding(.horizontal)
             .frame(height: 50)
             .background(Color(.systemGray6))
-            .cornerRadius(10)
+            .cornerRadius(12)
             .padding(.horizontal)
 
-            // MARK: - Forgot Password
-            HStack {
-                Spacer()
-                Text("Forgot Password?")
-                    .foregroundColor(.gray)
-            }
-            .padding(.horizontal)
-
-            // MARK: - Sign In Button
+            // MARK: - Sign Up Button
             Button(action: {
-                // Sign-in logic here
+                // Sign up logic here
             }) {
-                Text("Sign In")
+                Text("Sign Up")
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -81,22 +87,22 @@ struct SignInView: View {
                     .cornerRadius(25)
             }
             .padding(.horizontal)
-            .padding(.top, 10) // Small top spacing
+            .padding(.top, 10)
 
-            // MARK: - Sign Up Prompt
+            // MARK: - Already have account
             HStack(spacing: 4) {
-                Text("Don’t have an account?")
-                NavigationLink(destination: SignUpView()) {
-                    Text("Sign Up")
-                        .foregroundColor(.pink)
+                Text("Already have an account?")
+                NavigationLink(destination: SignInView()) {
+                    Text("Sign In")
+                        .foregroundColor(.green)
                         .fontWeight(.semibold)
                 }
             }
-            .padding(.top, 8)
+            .padding(.top, 10)
             Spacer()
 
             // MARK: - Social Buttons
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
                 HStack {
                     Image(systemName: "f.square.fill")
                     Text("Continue With Facebook")
@@ -119,16 +125,16 @@ struct SignInView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(15)
             }
-            .padding(.top, 12)
             .padding(.horizontal)
+            .padding(.top, 32)
 
-            Spacer(minLength: 20)
+            Spacer()
         }
     }
 }
 
 #Preview {
     NavigationView {
-        SignInView()
+        SignUpView()
     }
 }
