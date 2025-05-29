@@ -6,9 +6,25 @@ struct SignUpView: View {
     @State private var password: String = ""
     @State private var showPassword: Bool = false
 
+    // MARK: - Validation Computed Properties
+    private var isEmailValid: Bool {
+        email.contains("@") && email.contains(".")
+    }
+
+    private var isUsernameValid: Bool {
+        !username.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    private var isPasswordValid: Bool {
+        password.count >= 6
+    }
+
+    private var isFormValid: Bool {
+        isEmailValid && isUsernameValid && isPasswordValid
+    }
+
     var body: some View {
         VStack(spacing: 20) {
-
             // MARK: - Logo
             VStack(spacing: 8) {
                 HStack {
@@ -40,54 +56,94 @@ struct SignUpView: View {
             .padding(.top, 24)
 
             // MARK: - Email Field
-            TextField("Email", text: $email)
-                .padding(.horizontal)
-                .frame(height: 50)
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
-                .padding(.horizontal)
+            VStack(alignment: .leading, spacing: 4) {
+                TextField("Email", text: $email)
+                    .padding(.horizontal)
+                    .frame(height: 50)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isEmailValid || email.isEmpty ? Color.clear : Color.red)
+                    )
 
-            // MARK: - Username Field
-            TextField("Username", text: $username)
-                .padding(.horizontal)
-                .frame(height: 50)
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
-                .padding(.horizontal)
-
-            // MARK: - Password Field
-            HStack {
-                if showPassword {
-                    TextField("Password", text: $password)
-                } else {
-                    SecureField("Password", text: $password)
-                }
-                Button(action: {
-                    showPassword.toggle()
-                }) {
-                    Image(systemName: showPassword ? "eye.slash" : "eye")
-                        .foregroundColor(.gray)
+                if !isEmailValid && !email.isEmpty {
+                    Text("Enter a valid email address")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
                 }
             }
-            .padding(.horizontal)
-            .frame(height: 50)
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-            .padding(.horizontal)
+
+            // MARK: - Username Field
+            VStack(alignment: .leading, spacing: 4) {
+                TextField("Username", text: $username)
+                    .padding(.horizontal)
+                    .frame(height: 50)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isUsernameValid || username.isEmpty ? Color.clear : Color.red)
+                    )
+
+                if !isUsernameValid && !username.isEmpty {
+                    Text("Username cannot be empty")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                }
+            }
+
+            // MARK: - Password Field
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    if showPassword {
+                        TextField("Password", text: $password)
+                    } else {
+                        SecureField("Password", text: $password)
+                    }
+                    Button(action: {
+                        showPassword.toggle()
+                    }) {
+                        Image(systemName: showPassword ? "eye.slash" : "eye")
+                            .foregroundColor(.gray)
+                    }
+                }
+                .padding(.horizontal)
+                .frame(height: 50)
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+                .padding(.horizontal)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(isPasswordValid || password.isEmpty ? Color.clear : Color.red)
+                )
+
+                if !isPasswordValid && !password.isEmpty {
+                    Text("Password must be at least 6 characters")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                }
+            }
 
             // MARK: - Sign Up Button
             Button(action: {
-                // Sign up logic here
+                print("Sign Up tapped")
             }) {
                 Text("Sign Up")
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.green)
+                    .background(isFormValid ? Color.green : Color.gray)
                     .cornerRadius(25)
             }
             .padding(.horizontal)
             .padding(.top, 10)
+            .disabled(!isFormValid)
 
             // MARK: - Already have account
             HStack(spacing: 4) {
