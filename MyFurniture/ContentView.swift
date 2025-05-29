@@ -1,24 +1,15 @@
-//
-//  ContentView.swift
-//  MyFurniture
-//
-//  Created by Peyman Osatian on 2025-05-15.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @EnvironmentObject var authViewModel: AuthViewModel
 
-#Preview {
-    ContentView()
+    var body: some View {
+        NavigationView {
+            if authViewModel.isAuthenticated {
+                HomeView()
+            } else {
+                SignInView()
+            }
+        }
+    }
 }

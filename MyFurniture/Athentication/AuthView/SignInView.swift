@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SignInView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var showPassword: Bool = false
@@ -102,9 +104,18 @@ struct SignInView: View {
             }
             .padding(.horizontal)
 
+            // MARK: - Error Message (if any)
+            if let error = authViewModel.errorMessage {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+
             // MARK: - Sign In Button
             Button(action: {
-                print("Sign in tapped with \(email) / \(password)")
+                authViewModel.signIn(email: email, password: password)
             }) {
                 Text("Sign In")
                     .foregroundColor(.white)
@@ -115,7 +126,7 @@ struct SignInView: View {
             }
             .padding(.horizontal)
             .padding(.top, 10)
-            .disabled(!isFormValid) // Disable when form is not valid
+            .disabled(!isFormValid)
 
             // MARK: - Sign Up Prompt
             HStack(spacing: 4) {
@@ -161,8 +172,10 @@ struct SignInView: View {
         }
     }
 }
+
 #Preview {
     NavigationView {
         SignInView()
+            .environmentObject(AuthViewModel()) // Preview test
     }
 }

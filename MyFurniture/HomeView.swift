@@ -8,10 +8,22 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("Welcome to Home!")
+                .font(.largeTitle)
+
+            Button("Sign Out") {
+                authViewModel.signOut()
+            }
+            .foregroundColor(.red)
+            .padding()
+        }
     }
 }
+
 
 #Preview {
     HomeView()

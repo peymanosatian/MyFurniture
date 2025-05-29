@@ -1,12 +1,13 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     @State private var email: String = ""
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showPassword: Bool = false
 
-    // MARK: - Validation Computed Properties
     private var isEmailValid: Bool {
         email.contains("@") && email.contains(".")
     }
@@ -58,6 +59,8 @@ struct SignUpView: View {
             // MARK: - Email Field
             VStack(alignment: .leading, spacing: 4) {
                 TextField("Email", text: $email)
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
                     .padding(.horizontal)
                     .frame(height: 50)
                     .background(Color(.systemGray6))
@@ -79,6 +82,7 @@ struct SignUpView: View {
             // MARK: - Username Field
             VStack(alignment: .leading, spacing: 4) {
                 TextField("Username", text: $username)
+                    .autocapitalization(.none)
                     .padding(.horizontal)
                     .frame(height: 50)
                     .background(Color(.systemGray6))
@@ -112,6 +116,7 @@ struct SignUpView: View {
                             .foregroundColor(.gray)
                     }
                 }
+                .autocapitalization(.none)
                 .padding(.horizontal)
                 .frame(height: 50)
                 .background(Color(.systemGray6))
@@ -130,9 +135,18 @@ struct SignUpView: View {
                 }
             }
 
+            // MARK: - Error Message (if any)
+            if let error = authViewModel.errorMessage {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+
             // MARK: - Sign Up Button
             Button(action: {
-                print("Sign Up tapped")
+                authViewModel.signUp(email: email, password: password)
             }) {
                 Text("Sign Up")
                     .foregroundColor(.white)
@@ -155,6 +169,7 @@ struct SignUpView: View {
                 }
             }
             .padding(.top, 10)
+
             Spacer()
 
             // MARK: - Social Buttons
@@ -192,5 +207,6 @@ struct SignUpView: View {
 #Preview {
     NavigationView {
         SignUpView()
+            .environmentObject(AuthViewModel())
     }
 }
